@@ -2,8 +2,8 @@
 
 ## 📖 O que é o projeto?
 Este projeto implementa um sistema de comunicação IoT bidirecional entre dois microcontroladores utilizando o protocolo MQTT. Ele funciona como um "Bat-Sinal" remoto:
-* **Node A (Emissor - Minha Parte):** Lê o acionamento de um botão físico e publica uma mensagem de alerta em um servidor (Broker MQTT).
-* **Node B (Receptor - Parte da Dupla):** Fica inscrito no tópico do servidor, escutando as mensagens em tempo real. Ao receber o alerta do Node A, ele aciona um componente de saída (como um LED ou refletor) na sua própria bancada.
+* **Node A (Emissor):** Lê o acionamento de um botão físico e publica uma mensagem de alerta em um servidor (Broker MQTT).
+* **Node B (Receptor):** Fica inscrito no tópico do servidor, escutando as mensagens em tempo real. Ao receber o alerta do Node A, ele aciona um componente de saída (como um LED ou refletor) na sua própria bancada.
 
 ## 🛠️ O que usamos (Ferramentas e Hardware)
 * **Microcontroladores:** 2x Placas ESP32-S3.
