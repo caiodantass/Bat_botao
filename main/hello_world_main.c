@@ -16,7 +16,9 @@
 // --- CONFIGURAÇÕES DA REDE E DO BROKER ---
 #define EXAMPLE_ESP_WIFI_SSID      "MERCUSYS_7E02" 
 #define EXAMPLE_ESP_WIFI_PASS      "70960594" 
-#define MQTT_BROKER_URI            "mqtt://192.168.177:1883" // IP do Broker Mosquitto do laboratório
+#define MQTT_BROKER_URI            "mqtt://192.168.1.107:1883" // IP do Broker Mosquitto do laboratório
+
+
 
 // --- CONFIGURAÇÃO DO BOTÃO ---
 #define BUTTON_GPIO                GPIO_NUM_4 
@@ -78,6 +80,9 @@ static void wifi_init_sta(void) {
     };
     ESP_ERROR_CHECK(esp_wifi_set_mode(WIFI_MODE_STA));
     ESP_ERROR_CHECK(esp_wifi_set_config(WIFI_IF_STA, &wifi_config));
+
+    ESP_ERROR_CHECK(esp_wifi_set_ps(WIFI_PS_NONE));
+
     ESP_ERROR_CHECK(esp_wifi_start());
 
     ESP_LOGI(TAG, "wifi_init_sta finalizado.");
@@ -111,6 +116,7 @@ static void mqtt_event_handler(void *handler_args, esp_event_base_t base, int32_
 static void mqtt_app_start(void) {
     esp_mqtt_client_config_t mqtt_cfg = {
         .broker.address.uri = MQTT_BROKER_URI,
+        .session.keepalive = 15,
     };
     client = esp_mqtt_client_init(&mqtt_cfg);
     esp_mqtt_client_register_event(client, ESP_EVENT_ANY_ID, mqtt_event_handler, NULL);
@@ -142,7 +148,7 @@ void bat_button_task(void *pvParameters) {
                 const char *payload = bat_signal_state ? "BAT_SIGNAL_ON" : "BAT_SIGNAL_OFF";
                 
                 if (client != NULL) {
-                    esp_mqtt_client_publish(client, "gotham/dpgc/batsignal", payload, 0, 1, 0);
+                    esp_mqtt_client_publish(client, "gotham/dpgc/berg_caio/batsignal", payload, 0, 1, 0);
                     ESP_LOGI(TAG, "[ALERTA] Comissário Gordon acionou o Bat-Button! Publicado: %s", payload);
                 }
                 
@@ -166,7 +172,7 @@ void bat_heartbeat_task(void *pvParameters) {
             char payload[100];
             snprintf(payload, sizeof(payload), "{\"device\": \"bat_button\", \"status\": \"ONLINE\", \"uptime_s\": %d}", uptime);
             
-            esp_mqtt_client_publish(client, "gotham/dpgc/status", payload, 0, 1, 0);
+            esp_mqtt_client_publish(client, "gotham/dpgc/berg_caio/status", payload, 0, 1, 0);
             ESP_LOGI(TAG, "[HEARTBEAT] Status enviado para Batcaverna: %s", payload);
         }
     }
