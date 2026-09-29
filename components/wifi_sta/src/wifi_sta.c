@@ -50,12 +50,17 @@ void wifi_sta_start(void)
         .sta = {
             .ssid = BAT_WIFI_SSID,
             .password = BAT_WIFI_PASSWORD,
+            .threshold.authmode = WIFI_AUTH_WPA2_PSK,
+            .sae_pwe_h2e = WPA3_SAE_PWE_BOTH,
+            .pmf_cfg = {
+                .capable = true,
+                .required = false,
+            },
         },
     };
 
     ESP_ERROR_CHECK(esp_wifi_set_mode(WIFI_MODE_STA));
     ESP_ERROR_CHECK(esp_wifi_set_config(WIFI_IF_STA, &wifi_config));
-    ESP_ERROR_CHECK(esp_wifi_set_ps(WIFI_PS_NONE));
     ESP_ERROR_CHECK(esp_wifi_start());
 
     ESP_LOGI(TAG, "wifi_init_sta finalizado. SSID:%s", BAT_WIFI_SSID);

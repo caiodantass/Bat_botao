@@ -42,7 +42,6 @@ void mqtt_app_start(void)
 {
     const esp_mqtt_client_config_t mqtt_cfg = {
         .broker.address.uri = BAT_MQTT_BROKER_URI,
-        .session.keepalive = 15,
     };
 
     s_client = esp_mqtt_client_init(&mqtt_cfg);
